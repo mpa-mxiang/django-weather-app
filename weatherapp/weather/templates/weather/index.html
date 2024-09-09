@@ -9,7 +9,7 @@
 <body>
     <form method="POST">
         {% csrf_token %}
-        <input type="text" placeholder="Enter a city name" />
+        <input type="text" name="city" placeholder="Enter a city name" />
         <button type="submit">Enter</button>
     </form>
     <h1>{{ temp }}°C</h1>
