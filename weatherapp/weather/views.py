@@ -9,4 +9,13 @@ def home(request):
         city = 'New York'
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}'
     PARMAS = {'units': 'metric'}
-    return render(request, 'weather/index.html')
+
+    data = request.get(url, PARMAS).json()
+
+    describe = data['weather'][0]['description']
+    icon = data['weather'][0]['icon']
+    temp = data['main']['temp']
+
+    day = datetime.date.today()
+
+    return render(request, 'weather/index.html', {'description': describe, 'icon': icon, 'temp': temp, 'day' : day})
