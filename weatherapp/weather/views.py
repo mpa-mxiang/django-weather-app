@@ -25,12 +25,12 @@ def home(request):
         if 'weather' in data:
             describe = data['weather'][0]['description']
             icon = data['weather'][0]['icon']
-            temp = data['main']['temp']
+            temp = str(data['main']['temp']) + '°C'
         else:
             # If 'weather' key is not present, handle the error
             describe = 'Weather data not available'
             icon = None
-            temp = 0
+            temp = None
         
     except Exception as e:
         # Handle any other exceptions (e.g., network issues)
