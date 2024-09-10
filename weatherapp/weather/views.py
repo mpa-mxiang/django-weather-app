@@ -4,6 +4,7 @@ import requests
 import datetime 
 from dotenv import load_dotenv
 load_dotenv()
+
 # Create your views here.
 def home(request):
     # Grab the API key from environment variables
@@ -16,43 +17,55 @@ def home(request):
     else:
         city = 'Toronto'
         
+    # URL for weather API
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}'
     params = {'units': 'metric'}
 
-    query = city + "1920x1080"
+    # Query for Google Custom Search
+    query = city
     page = 1
-    start = (page-1) * 10 + 1
+    start = (page - 1) * 10 + 1
     searchType = 'image'
     city_url = f"https://www.googleapis.com/customsearch/v1?key={search_api_key}&cx={search_id}&q={query}&start={start}&searchType={searchType}&imgSize=xlarge"
 
+    # Make the Google Custom Search API request
     city_data = requests.get(city_url).json()
-    count = 1
+
+    # Check if the search returned items and retrieve image URL if available
     search_items = city_data.get('items')
-    image_url = search_items[1]['link']
-    
+    if search_items and len(search_items) > 1:
+        image_url = search_items[1]['link']
+    else:
+        image_url = None  # Handle case where no image is returned
+
     try:
+        # Make the weather API request
         response = requests.get(url, params=params)
         data = response.json()
 
-        
         # Check if 'weather' key exists in the response
         if 'weather' in data:
             describe = data['weather'][0]['description']
             icon = data['weather'][0]['icon']
             temp = str(data['main']['temp']) + '°C'
         else:
-            # If 'weather' key is not present, handle the error
             describe = 'Weather data not available'
             icon = None
             temp = None
-        
     except Exception as e:
-        # Handle any other exceptions (e.g., network issues)
+        # Handle any exceptions (e.g., network issues)
         describe = 'Error fetching data'
         icon = None
         temp = None
 
     day = datetime.date.today()
-    
 
-    return render(request, 'weather/index.html', {'description': describe, 'icon': icon, 'temp': temp, 'day': day, 'city': city, 'image_url': image_url})
+    # Render the template with the context
+    return render(request, 'weather/index.html', {
+        'description': describe,
+        'icon': icon,
+        'temp': temp,
+        'day': day,
+        'city': city,
+        'image_url': image_url
+    })
