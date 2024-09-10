@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
-<body>
+<body   style="background-image: url('{{ image_url }}');">
     <form method="POST">
         {% csrf_token %}
         <input type="text" name="city" placeholder="Enter a city name" />

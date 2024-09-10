@@ -11,17 +11,6 @@ def home(request):
     search_api_key = os.getenv('SEARCH_ENGINE_API_KEY')
     search_id = os.getenv('SEARCH_ENGINE_ID')
 
-    query = city + "1920x1080"
-    page = 1
-    start = (page-1) * 10 + 1
-    searchType = 'image'
-    city_url = f"https://www.googleapis.com/customsearch/v1?key={search_api_key}&cx={search_id}&q={query}&start={start}&searchType={searchType}&imgSize=xlarge"
-
-    data = request.request.get(city_url).json()
-    count = 1
-    search_items = data.get('items')
-    image_url = search_items[1]['link']
-
     if 'city' in request.POST:
         city = request.POST['city']
     else:
@@ -29,6 +18,17 @@ def home(request):
         
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_api_key}'
     params = {'units': 'metric'}
+
+    query = city + "1920x1080"
+    page = 1
+    start = (page-1) * 10 + 1
+    searchType = 'image'
+    city_url = f"https://www.googleapis.com/customsearch/v1?key={search_api_key}&cx={search_id}&q={query}&start={start}&searchType={searchType}&imgSize=xlarge"
+
+    city_data = requests.get(city_url).json()
+    count = 1
+    search_items = city_data.get('items')
+    image_url = search_items[1]['link']
     
     try:
         response = requests.get(url, params=params)
