@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body   style="background-image: url('{{ image_url }}');">
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="city" placeholder="Enter a city name" />
+        <button type="submit">Enter</button>
+    </form>
+    <h1>{{ temp }}</h1>
+    <h2>{{ city }}</h2>
+    <p>{{ description }}</p>
+    <p>
+        <img src="http://openweathermap.org/img/w/{{ icon }}.png" width="120px" />
+    </p>
+    <p>
+        {{ day }}
+    </p>
+</body>
+</html>
